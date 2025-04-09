@@ -1,0 +1,567 @@
+﻿<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPORTECH | Сенің күшің — бізбен</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: white;
+            background-image: url('background.jpeg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        header {
+            background-image: url('https://images.unsplash.com/photo-1571019613914-85f342c1d4b2?auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        header h1 {
+            font-size: 60px;
+            color: red;
+            text-shadow: 2px 2px black;
+        }
+
+        header p {
+            font-size: 22px;
+            color: #ccc;
+            margin-top: 20px;
+            max-width: 600px;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #111;
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            padding: 15px 0;
+            z-index: 100;
+            border-bottom: 2px solid red;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: red;
+        }
+
+        .section {
+            display: none;
+            padding: 60px 20px;
+        }
+
+        .active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        .product {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .product div {
+            background-color: #1c1c1c;
+            border-left: 5px solid red;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 200px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product div:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+        }
+
+        .product img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .buy-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: orange;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .buy-btn:hover {
+            background-color: darkorange;
+        }
+
+        .promo, .fort-box, .contact-form {
+            background-color: #1c1c1c;
+            border-left: 5px solid red;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 700px;
+        }
+
+        .promo h3, .fort-box h3 {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        .promo p, .fort-box p {
+            color: #ccc;
+        }
+
+        form input, form textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background-color: #333;
+            border: none;
+            color: white;
+            border-radius: 5px;
+        }
+
+        form button {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        form button:hover {
+            background-color: darkred;
+        }
+
+        #cart-icon {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            cursor: pointer;
+            z-index: 999;
+            background-color: white;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+        #cart-icon img {
+            width: 40px;
+        }
+
+        #cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 14px;
+        }
+
+        #cart-popup {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            background-color: #1c1c1c;
+            color: white;
+            padding: 20px;
+            box-shadow: -5px 0 10px rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        #cart-popup ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #cart-popup li {
+            margin-bottom: 10px;
+        }
+
+        #cart-popup button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #cart-popup button:hover {
+            background-color: darkred;
+        }
+
+        .total-price {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Себет иконкасы -->
+<div id="cart-icon" onclick="toggleCartPopup()">
+    <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart">
+    <span id="cart-count">0</span>
+</div>
+
+<!-- Себет терезесі -->
+<div id="cart-popup">
+    <h3>Себет</h3>
+    <ul id="cart-items">
+        <!-- Тауарлар қосылған кезде осында көрсетіледі -->
+    </ul>
+    <p class="total-price">Барлығы: 0 ₸</p>
+    <button onclick="clearCart()">Тазарту</button>
+</div>
+
+<!-- Модальды терезе -->
+<div id="product-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000;">
+    <div style="background:#1c1c1c; max-width:400px; margin:15% auto; padding:20px; border-radius:8px; border-left:5px solid red;">
+        <h3 id="modal-title" style="color:red;"></h3>
+        <p id="modal-description" style="color:#ccc;"></p>
+        <p id="modal-price" style="color:white;"></p>
+        <button onclick="closeProductDetails()" style="background:red; color:white; padding:8px 16px; border:none; border-radius:5px; cursor:pointer;">Жабу</button>
+    </div>
+</div>
+
+<!-- Мәзір -->
+<nav>
+    <a onclick="showSection('home')">Басты бет</a>
+    <a onclick="showSection('promo')">Акциялар</a>
+    <a onclick="showSection('clothes')">Киім товарлары</a>
+    <a onclick="showSection('fort')">Сіздің форт</a>
+    <a onclick="showSection('reviews')">Отзыв</a>
+    <a onclick="showSection('contact')">Байланыс</a>
+</nav>
+
+<!-- Басты бет -->
+<header id="home" class="section active">
+    <h1>Beka's and Era Sportpit </h1>
+    <t>Бұл — жай ғана өнім емес. Бұл — күш, тәртіп, және сенің мықтылығың. Бізбен бірге шекарасыз бол!</t>
+
+    <!-- Тауарлар -->
+    <div class="product">
+        <div onclick="showProductDetails('Протеин', '25 грамм ақуыз, 5 грамм BCAA, шоколад дәмі', 25000)">
+            <img src="https://th.bing.com/th/id/OIP.T_VUhH4_sloIOkzDVuPpmAHaHa?rs=1&pid=ImgDetMain" alt="Протеин">
+            <h3>Протеин</h3>
+            <p>25,000 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Протеин', 25000)">Купить</button>
+        </div>
+        <div onclick="showProductDetails('Креатин', '5 грамм таза креатин моногидраты, күшті арттырады', 8500)">
+            <img src="https://th.bing.com/th/id/OIP.NlwYBqqscrCrBl5rkLhP0AHaHa?rs=1&pid=ImgDetMain" alt="Креатин">
+            <h3>Креатин</h3>
+            <p>8,500 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Креатин', 8500)">Купить</button>
+        </div>
+        <div onclick="showProductDetails('Гейнер', '50 грамм көмірсу, 20 грамм ақуыз, салмақ қосуға арналған', 22000)">
+            <img src="https://cdn1.ozone.ru/s3/multimedia-1-s/c600/6923906164.jpg" alt="Гейнер">
+            <h3>Гейнер</h3>
+            <p>22,000 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Гейнер', 22000)">Купить</button>
+        </div>
+        <div onclick="showProductDetails('BCAA', '5 грамм BCAA, бұлшықетті қалпына келтіреді', 9000)">
+            <img src="https://th.bing.com/th/id/OIP.eaUfc6wJNaFW4-qGTOVKFwHaHa?rs=1&pid=ImgDetMain" alt="BCAA">
+            <h3>BCAA</h3>
+            <p>9,000 ₸</p>
+            <button class="buy-btn" onclick="addToCart('BCAA', 9000)">Купить</button>
+        </div>
+        <div onclick="showProductDetails('Тренболон', 'Күшті анаболикалық әсер, тез нәтиже', 18000)">
+            <img src="https://th.bing.com/th/id/OIP.2MDQT15nyKe5gITfs4ui9gHaHa?rs=1&pid=ImgDetMain" alt="Тренболон">
+            <h3>Тренболон</h3>
+            <p>18,000 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Тренболон', 18000)">Купить</button>
+        </div>
+        <div onclick="showProductDetails('Шейкер', 'Спорттық қоспаларды араластыруға арналған қолайлы ыдыс', 1000)">
+            <img src="https://cdn1.ozone.ru/s3/multimedia-g/c600/6237935860.jpg" alt="Шейкер">
+            <h3>Шейкер</h3>
+            <p>1000 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Шейкер', 1000)">Купить</button>
+        </div>
+        <div onclick="showProductDetails('Блендер', 'Әртүрлі коктейльдер әсіресе протеинді коктейльдерді араластыруға арналған', 15000)">
+            <img src="https://restoll.ru/upload/iblock/b86/1mzg97lut2vm160cjlprq6purre7iicl/blender-tristar-bl-4441.jpg" alt="Блендер">
+            <p>15,000 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Блендер', 15000)">Купить</button>
+        </div>
+        <div onclick="showProductDetails('Бутылка', 'Су немесе коктейльді құйып әрі алып жүруге арналған ыдыс', 1500)">
+            <img src="https://avatars.mds.yandex.net/i?id=4bfe58505fa01440f10f5f2c13e99847_l-12155387-images-thumbs&n=13" alt="Бутылка">
+            <p>1,500 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Бутылка', 1500)">Купить</button>
+        </div>
+    </div>
+</header>
+
+<!-- Акциялар -->
+<div id="promo" class="section">
+    <h2 style="text-align:center;">Жеңілдіктер — тек нағыз аюлар үшін</h2>
+
+    <div class="promo">
+        <h3>Whey Protein - 20% жеңілдік</h3>
+        <p>Бұрынғы баға: <s>25,000 ₸</s> | Қазір: <strong>20,000 ₸</strong></p>
+    </div>
+
+    <div class="promo">
+        <h3>Creatine Monohydrate - 2+1</h3>
+        <p>Екеуін алсаң, үшіншісі тегін! 8,500 ₸-ге екі дана.</p>
+    </div>
+
+    <div class="promo">
+        <h3>Mass Gainer - 15% жеңілдік</h3>
+        <p>Жаңа клиенттерге баға: <strong>18,700 ₸</strong></p>
+    </div>
+</div>
+
+<!-- Киім дүкені -->
+<div id="clothes" class="section">
+    <h2 style="text-align:center;">Киім дүкеніыы</h2>
+
+    <div class="promo">
+        <h3>Спорттық киімдер</h3>
+        <p>Бұл бөлімде спорттық киімдер. Өзіңізге ыңғайлы әрі ұнаған киімді алыңыз!</p>
+    </div>
+    <div onclick="showProductDetails('Футболка Gym Shark', 'Сапалы әрі сәнді футболка', 7500)">
+            <img src="https://nazya.com/anyimage/img.alicdn.com/imgextra/i3/3326115198/TB2HOXlyC0mpuFjSZPiXXbssVXa_!!3326115198.jpg" alt="Футболка Gym Shark">
+            <p>7,500 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Футболка Gym Shark', 7500)">Купить</button>
+        </div>
+    <div onclick="showProductDetails('Футболка Gym Shark', 'Сапалы әрі сәнді футболка', 7500)">
+            <img src="https://i.pinimg.com/736x/6d/ed/35/6ded35172e07429885eaff1d8393abe9.jpg" alt="Футболка Gym Shark">
+            <p>7,500 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Футболка Gym Shark', 7500)">Купить</button>
+        </div>
+    <div onclick="showProductDetails('Футболка Gym Shark', 'Сапалы әрі сәнді футболка', 7500)">
+            <img src="https://i.pinimg.com/736x/2d/86/2a/2d862a1740b4ab48050433e8c14fa833.jpg" alt="Футболка Gym Shark">
+            <p>7,500 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Футболка Gym Shark', 7500)">Купить</button>
+        </div>
+    <div onclick="showProductDetails('Шорты Gym Shark', 'Сапалы әрі сәнді шорты', 4500)">
+            <img src="https://s.alicdn.com/@sc04/kf/UT8EBraX3JcXXagOFbXo.jpg" alt="Шорты Gym Shark">
+            <p>4,500 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Шорты Gym Shark', 4500)">Купить</button>
+        </div>
+     <div onclick="showProductDetails('Шорты Gym Shark', 'Сапалы әрі сәнді шорты', 4500)">
+            <img src="https://70.img.avito.st/image/1/1.FoT_1ra4um3Jf3ho375at5x0uGtBdzhliXK4b09_smdJ.REDT4kgrvuoiKZ5rFiPr83jbgcyTL_iStk6_tnyanAs" alt="Шорты Gym Shark">
+            <p>4,500 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Шорты Gym Shark', 4500)">Купить</button>
+        </div>
+     <div onclick="showProductDetails('Кепка Gym Shark', 'Сапалы әрі сәнді Кепка', 2500)">
+            <img src="https://www.dhresource.com/albu_2046563152_00/1.600x600.jpg" alt="Кепка Gym Shark">
+            <p>2,500 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Кепка Gym Shark', 2500)">Купить</button>
+        </div>
+     <div onclick="showProductDetails('Кепка Gym Shark', 'Сапалы әрі сәнді Кепка', 2500)">
+            <img src="https://vse-footbolki.ru/image/catalog/vsm/0/0/566/566977/previews/people_1_cap_trucker_front_white_700.jpg" alt="Кепка Gym Shark">
+            <p>2,500 ₸</p>
+            <button class="buy-btn" onclick="addToCart('Кепка Gym Shark', 2500)">Купить</button>
+        </div>
+</div>
+
+<!-- Мотивация -->
+<div id="fort" class="section">
+    <h2 style="text-align:center;">СЕНІҢ ФОРТ — Мотивация алаңы</h2>
+
+    <div class="fort-box">
+        <h3>Күш — тәртіптен басталады</h3>
+        <p>Өнімдерің, прогрессің және мақсаттарың осында болады. Жақында іске қосылады!</p>
+    </div>
+
+    <div class="fort-box">
+        <h3>Жетістік = Протеин + Ерік + Жаттығу</h3>
+        <p>Сенің форт — сенің базаң.</p>
+    </div>
+
+    <div class="fort-box">
+        <h3>Осы музыкамен тренканы ұра бер, Аю!</h3>
+        <p><a href="https://youtu.be/4L3Spg7ZXyQ?si=HKjUW5MjKhPejGkw" target="_blank" style="color: red; text-decoration: none;">Осыны бас!</a></p>
+    </div>
+</div>
+
+<!-- Отзыв -->
+<div id="reviews" class="section">
+    <h2 style="text-align:center;">Пікірлер</h2>
+
+    <div class="promo" style="max-width: 700px; margin: 20px auto;">
+        <div style="display: flex; align-items: center;">
+            <img src="https://www.servicenow.com/community/s/legacyfs/online/avatars_servicenow/a9a7392fdbbfdb00d58ea345ca96198f.jpg" alt="Димок" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 15px;">
+            <div>
+                <h3 style="color: red;">Димок</h3>
+                <p style="color: #ccc;">Мен бұл дүкеннен Протеинмен шейкер алдым. Протеин жақсы араласады және дәмі жағымды. Кеңес беремін алуға!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Байланыс -->
+<div id="contact" class="section">
+    <h2 style="text-align:center;">Бізбен байланыс</h2>
+
+    <div class="contact-form">
+        <form>
+            <input type="text" placeholder="Атың" required>
+            <input type="email" placeholder="Email" required>
+            <textarea placeholder="Хабарлама..." rows="4" required></textarea>
+            <button type="submit">Жіберу</button>
+        </form>
+        <!-- Мекен-жай қосылды -->
+        <div style="margin-top: 20px; text-align: center;">
+            <p>Мекен-жай: 
+                <a href="https://www.google.com/maps/search/?api=1&query=192-й квартал 979/15" target="_blank" style="color: red; text-decoration: none;">
+                    192-й квартал 979/15
+                </a>
+                <span style="color: white;">📍</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(s => s.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+        
+        // "Киім товарлары" бөлімі ашылғанда өлшемдерді қосу
+        if (sectionId === 'clothes') {
+            addSizeSection();
+        }
+    }
+
+    let cartCount = 0;
+    let cartItems = [];
+    let totalPrice = 0;
+
+    function addToCart(productName, price) {
+        cartCount++;
+        totalPrice += price;
+        cartItems.push({ name: productName, price: price });
+        document.getElementById("cart-count").innerText = cartCount;
+        updateCartPopup();
+    }
+
+    function updateCartPopup() {
+        const cartItemsList = document.getElementById("cart-items");
+        cartItemsList.innerHTML = '';
+
+        cartItems.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `${item.name} — ${item.price} ₸`;
+            cartItemsList.appendChild(li);
+        });
+
+        document.querySelector('.total-price').innerText = `Барлығы: ${totalPrice} ₸`;
+    }
+
+    function toggleCartPopup() {
+        const cartPopup = document.getElementById("cart-popup");
+        cartPopup.style.display = cartPopup.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function clearCart() {
+        cartCount = 0;
+        totalPrice = 0;
+        cartItems = [];
+        document.getElementById("cart-count").innerText = cartCount;
+        document.getElementById("cart-items").innerHTML = '';
+        document.querySelector('.total-price').innerText = `Барлығы: 0 ₸`;
+    }
+
+    function showProductDetails(productName, description, price) {
+        document.getElementById("modal-title").innerText = productName;
+        document.getElementById("modal-description").innerText = "Сипаттамасы: " + description;
+        document.getElementById("modal-price").innerText = "Бағасы: " + price + " ₸";
+        document.getElementById("product-modal").style.display = "block";
+    }
+
+    function closeProductDetails() {
+        document.getElementById("product-modal").style.display = "none";
+    }
+
+    // "Өлшемді енгізу" вкладкасын қосу функциясы
+    function addSizeSection() {
+        const clothesSection = document.getElementById("clothes");
+        
+        // Егер "size-section" әлі қосылмаған болса, қосамыз
+        if (!document.getElementById("size-section")) {
+            const sizeSection = document.createElement("div");
+            sizeSection.id = "size-section";
+            sizeSection.innerHTML = `
+                <div class="promo" style="margin-top: 20px;">
+                    <h3 onclick="toggleSizeOptions()" style="cursor: pointer;">Өлшемді енгізу</h3>
+                    <div id="size-options" style="display: none;">
+                        <p>Өлшемді таңдаңыз:</p>
+                        <select id="size-select" style="width: 100%; padding: 10px; background-color: #333; color: white; border: none; border-radius: 5px;">
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                        <button onclick="addSizeToCart()" style="margin-top: 10px; background-color: orange; color: black; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer;">Себетке қосу</button>
+                    </div>
+                </div>
+            `;
+            clothesSection.appendChild(sizeSection);
+        }
+    }
+
+    // Өлшем опцияларын ашу/жабу функциясы
+    function toggleSizeOptions() {
+        const sizeOptions = document.getElementById("size-options");
+        sizeOptions.style.display = sizeOptions.style.display === "block" ? "none" : "block";
+    }
+
+    // Таңдалған өлшемді себетке қосу функциясы
+    function addSizeToCart() {
+        const selectedSize = document.getElementById("size-select").value;
+        const sizePrice = 0; // Өлшемнің өзіндік бағасы жоқ деп есептейміз, тек тауармен бірге қосылады
+        addToCart(`Өлшем: ${selectedSize}`, sizePrice);
+        alert(`"${selectedSize}" өлшемі себетке қосылды!`);
+    }
+</script>
+
+</body>
+</html>
